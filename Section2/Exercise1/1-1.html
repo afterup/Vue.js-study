@@ -1,0 +1,21 @@
+<script src="https://npmcdn.com/vue/dist/vue.js"></script>
+
+<div id="app">
+    <p v-if="show">It is true!</p>
+    <p v-else-if="flag">It is flag</p>
+    <p v-else>isn't it?</p>
+    <p>Boolean says.. </p>
+    <button @click="show=!show">Switch</button>
+    <button @click="flag=!flag">flag</button>
+</div>
+
+
+<script>
+new Vue({
+    el:'#app',
+    data:{
+        show:true,
+        flag:true,
+    }
+})
+</script>
