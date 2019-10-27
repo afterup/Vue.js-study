@@ -1,0 +1,43 @@
+<script src="https://unpkg.com/vue"></script>
+
+<div id="app">
+  <p>{{ name }}</p>
+  <button v-on:click="increase(2, $event)"> Click </button>
+  <p>
+    {{counter}}
+  </p>
+  <p v-on:mousemove = "updateCoordinates">
+    {{x}} / {{y}}
+    <span v-on:mousemove.stop = "">Dead Spot</span>
+  </p>
+  <input type="text" v-on:keyup.enter.space="alertIn"><br>
+  <input type="text" v-model = "duplicate">
+  <p>
+    {{duplicate}}
+  </p>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+          name: 'fora',
+          counter: 0,
+          x: 0,
+          y: 0,
+          duplicate:"o",
+        },
+        methods: {
+            increase : function(step, event){
+              this.counter += step;
+          },
+          updateCoordinates: function(event){
+              this.x = event.clientX;
+            this.y = event.clientY;
+          },
+          alertIn: function(){
+              alert("o");
+          }
+        }
+      })
+</script>
