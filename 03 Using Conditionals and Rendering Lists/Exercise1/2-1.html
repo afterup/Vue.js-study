@@ -2,7 +2,7 @@
 
 <div id="app">
     <ul>
-        <li v-for="(fruit,i) in fruits" :key="fruit">{{ fruit }} {{ i }}</li>
+        <li v-for="(fruit,i) in fruits" :key="fruit.id">{{fruit.id }} /// {{ fruit }} {{ i }}</li>
         <!-- :key -> [Vue warn]: Duplicate keys detected: 'melon'. This may cause an update error. -->
     </ul>
     <button @click="fruits.push('melon')">add</button>
