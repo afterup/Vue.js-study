@@ -4,6 +4,8 @@
         <hr>
         <p>ID: {{ id }}</p>
         <button @click="navigateToHome" class="btn btn-primary">Go to Home</button>
+        <hr>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -21,7 +23,7 @@ export default {
     },
     methods: {
         navigateToHome(){
-            this.$router.push('/');
+            this.$router.push({name:'home'});
         }
     }
 }
