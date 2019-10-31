@@ -1,0 +1,39 @@
+<script src="https://npmcdn.com/vue/dist/vue.js"></script>
+
+<div id="app1">
+    <p>{{title}}</p>
+</div>
+
+<div id="app2">
+    <p>{{title}}</p>
+    <button @click='onChange'>Change something in Vue1</button>
+</div>
+
+<script>
+    var vm1 = new Vue({
+        el: "#app1",
+        data: {
+            title: 'first title',
+        },
+        watch: {
+            title: function (value) {
+                alert('Title changed,' + value);
+            }
+        }
+    })
+    setTimeout(function () {
+        vm1.title = 'Changed by Timer '
+    },5000);
+
+    var vm2 = new Vue({
+        el: '#app2',
+        data: {
+            title: 'second title',
+        },
+        methods: {
+            onChange: function () {
+                vm1.title = 'Changed by methods'
+            }
+        }
+    })
+</script>
