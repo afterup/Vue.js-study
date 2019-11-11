@@ -6,6 +6,7 @@ import WelcomePage from './components/welcome/welcome.vue'
 import DashboardPage from './components/dashboard/dashboard.vue'
 import SignupPage from './components/auth/signup.vue'
 import SigninPage from './components/auth/signin.vue'
+import PostPage from './components/post/Post.vue'
 
 Vue.use(VueRouter)
 
@@ -22,7 +23,12 @@ const routes = [
       }else{
         next('/signin');//redirect
       }
-    } }
+    } 
+  },
+  {
+    path: '/post',
+    component: PostPage,
+  }
 ]
 
 export default new VueRouter({mode: 'history', routes})

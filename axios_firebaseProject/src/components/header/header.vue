@@ -15,6 +15,9 @@
           <router-link v-if="auth" to="/dashboard">Dashboard</router-link>
         </li>
         <li>
+          <router-link v-if="auth" to="/post">Add Post</router-link>
+        </li>
+        <li>
           <button @click="onLogout" v-if="auth" class="logout">Logout</button>
         </li>
       </ul>

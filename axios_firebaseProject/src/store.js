@@ -12,6 +12,7 @@ export default new Vuex.Store({
     idToken: null,
     userId: null,
     user: null,
+    posts: [],
   },
   mutations: {
     authUser(state, userData){
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     clearAuth(state){
       state.idToken = null;
       state.userId = null;
+    },
+    storePosts(state,posts){
+      state.posts = posts;
     }
   },
   actions: {
@@ -128,7 +132,34 @@ export default new Vuex.Store({
       commit('authUser',{
         token
       })
-
+    },
+    addPost({commit ,state}, postData){
+      if(!state.idToken){
+        return 
+      }
+      globalAxios.post('/posts.json' + '?auth='+ state.idToken, postData)
+        .then(res=> {
+          console.log(res)
+          alert('등록완료')
+          router.replace('/dashboard'); 
+        })
+        .catch(error => console.log(error));
+    },
+    getPost({commit,state}){
+      globalAxios.get('/posts.json'+ '?auth='+ state.idToken)
+        .then(res=>{
+          console.log(res);
+          const data = res.data;
+          const posts = [];
+          for(let key in data){
+            const post = data[key];
+            post.id = key;
+            posts.push(post);
+          }
+          console.log(posts);
+          commit('storePosts',posts);
+        })
+        .catch(error => console.log(error));
     }
   },
   getters: {
@@ -137,6 +168,10 @@ export default new Vuex.Store({
     },
     isAuthenticated (state) {
       return state.idToken !== null;
+    },
+    posts(state){
+      return state.posts;
     }
+
   }
 })
