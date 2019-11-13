@@ -21,18 +21,20 @@
                   v-model.number="age">
           <p v-if="!$v.age.minVal">You have to be at lease {{ $v.age.$params.minVal.min }} years old</p>
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.password.$error}">
           <label for="password">Password</label>
           <input
                   type="password"
                   id="password"
+                  @blur = "$v.password.$touch()"
                   v-model="password">
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.confirmPassword.$error}">
           <label for="confirm-password">Confirm Password</label>
           <input
                   type="password"
                   id="confirm-password"
+                  @blur = "$v.confirmPassword.$touch()"
                   v-model="confirmPassword">
         </div>
         <div class="input">
@@ -51,22 +53,27 @@
             <div
                     class="input"
                     v-for="(hobbyInput, index) in hobbyInputs"
+                    :class= "{invalid: $v.hobbyInputs.$each[index].$error}"
                     :key="hobbyInput.id">
               <label :for="hobbyInput.id">Hobby #{{ index }}</label>
               <input
                       type="text"
                       :id="hobbyInput.id"
+                      @blur = "$v.hobbyInputs.$each[index].$error"
                       v-model="hobbyInput.value">
               <button @click="onDeleteHobby(hobbyInput.id)" type="button">X</button>
             </div>
           </div>
         </div>
-        <div class="input inline">
-          <input type="checkbox" id="terms" v-model="terms">
+        <div class="input inline" :class="{invalid: $v.terms.$invalid}">
+          <input type="checkbox" 
+                id="terms" 
+                @change = "$v.terms.$touch()"
+                v-model="terms">
           <label for="terms">Accept Terms of Use</label>
         </div>
         <div class="submit">
-          <button type="submit">Submit</button>
+          <button type="submit" :disabled="$v.$invalid">Submit</button>
         </div>
       </form>
     </div>
@@ -74,7 +81,8 @@
 </template>
 
 <script>
-  import { required, email, numeric, minValue, minLength } from 'vuelidate/lib/validators'
+  import { required, email, numeric, minValue, minLength, sameAs, requiredUnless } from 'vuelidate/lib/validators'
+  import axios from 'axios'
 
   export default {
     data () {
@@ -92,6 +100,13 @@
       email: {
         required,
         email,
+        unique: val => {
+          if(val === '') return true
+          return axios.get('/users.json?orderBy="email"&equalTo="'+val+'"')
+            .then(res=>{
+              return Object.keys(res.data).length === 0
+            }).catch(err => console.log(err));
+        }
       },
       age: {
         required,
@@ -101,6 +116,23 @@
       password: {
         required,
         minLen: minLength(6),
+      },
+      confirmPassword: {
+        sameAs: sameAs('password')
+      },
+      terms: {
+        required: requiredUnless(vm=>{
+          return vm.country === 'germany';
+        })
+      },
+      hobbyInputs: {
+        minLen: minLength(2),
+        $each: {
+          value: {
+            required,
+            minLen: minLength(5)
+          }
+        }
       }
     },
     methods: {
